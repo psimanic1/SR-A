@@ -1,0 +1,341 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Street Race Audi!</title>
+        <script src="phaser.min.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update:update});
+		var auto,autoix;
+		
+		var kretnja;
+		var ulicatile;
+		var avdija,a3,a3s,a5,a6,a7,q7,tt,r8;
+        function preload () {
+			//Dodavanje pocetnih slika
+		   game.load.image('sr', 'Slike-izbor/sr.png');
+		   game.load.image('cilj','Slike-izbor/cilj.png');
+		   game.load.image('ulica','Slike-izbor/ulica.png');
+		   game.load.image('logo', 'Slike-izbor/Audi logo.png');
+		   game.load.image('bgnd', 'Slike-izbor/bgnd.jpg');
+           game.load.image('gas','Slike-izbor/gas.png');
+		   //Dodavanje slika za izbor vozila
+		   game.load.image('avdija','Slike-izbor/avdija.png');
+		   game.load.image('a3', 'Slike-izbor/a3.png');
+		   game.load.image('a3-sedan', 'Slike-izbor/a3-sedan.png');
+		   game.load.image('a5', 'Slike-izbor/a5-izbor.png');
+		   game.load.image('a6', 'Slike-izbor/a6-izbor.png');
+		   game.load.image('a7', 'Slike-izbor/a7-izbor.png');
+		   game.load.image('q7', 'Slike-izbor/q7.png');
+		   game.load.image('tt', 'Slike-izbor/audi_tt.png');
+		   game.load.image('r8', 'Slike-izbor/audi_r8.png');
+		   
+			//Dodavanje slika za voznju
+           game.load.image('a3v', 'GameSprites/a3.png');
+		   game.load.image('a3v-sedan', 'GameSprites/a3-sedan.png');
+		   game.load.image('a5v', 'GameSprites/a5.png');
+		   game.load.image('a6v', 'GameSprites/a6-avant.png');
+		   game.load.image('a7v', 'GameSprites/a7.png');
+		   game.load.image('q7v', 'GameSprites/q7.png');
+		   game.load.image('ttv', 'GameSprites/tt.png');
+		   game.load.image('r8v', 'GameSprites/r8.png');
+		   game.load.image('avdijav', 'GameSprites/audicija.png');
+		}
+
+        function create () {
+			//Dodavanje pozadine
+			game.add.image(0,0,'bgnd');
+			//Dodvanjae teksta
+			var text1 = game.add.text(0, 0, "Choose", { font: "50px Arial Black", fill: "white" });
+			var text3 = game.add.text(140, 40, "your", { font: "50px Arial Black", fill: "red" });
+			var text3 = game.add.text(225, 75, "Audi", { font: "50px Arial Black", fill: "white" });
+			//Dodavanje logo-a i dodatnih slika
+			game.add.sprite(500,10,'sr');
+			game.add.sprite(550,110,'logo');
+			//Dodavanje auta za izbor
+			avdija=game.add.sprite(75,100,'avdija');
+			a3=game.add.sprite(0,300,'a3');
+			a3s=game.add.sprite(150,300,'a3-sedan');
+			a5=game.add.sprite(300,300,'a5');
+			a6=game.add.sprite(450,300,'a6');
+			a7=game.add.sprite(0,450,'a7');
+			q7=game.add.sprite(150,450,'q7');
+			tt=game.add.sprite(300,450,'tt');
+			r8=game.add.sprite(450,450,'r8');
+			
+			a3.inputEnabled=true;
+			avdija.inputEnabled=true;			
+			a3s.inputEnabled=true;
+			a5.inputEnabled=true;
+			a6.inputEnabled=true;
+			a7.inputEnabled=true;
+			q7.inputEnabled=true;
+			tt.inputEnabled=true;
+			r8.inputEnabled=true;
+			
+			
+			a3.events.onInputDown.add(a3listener, this);
+			avdija.events.onInputDown.add(avdijalistener,this);
+			a3s.events.onInputDown.add(a3slistener, this);
+			a5.events.onInputDown.add(a5listener, this);
+			a6.events.onInputDown.add(a6listener, this);
+			a7.events.onInputDown.add(a7listener, this);
+			q7.events.onInputDown.add(q7listener, this);
+			tt.events.onInputDown.add(ttlistener, this);
+			r8.events.onInputDown.add(r8listener, this);
+			
+		}
+		function avdijalistener()
+		{
+		auto=0;
+		kretanje=0;
+		game.world.removeAll();
+		}
+		function a3listener () {
+			auto=1;
+			kretanje=1;
+			game.world.removeAll();
+		}
+		function a3slistener () {
+			auto=2;
+			kretanje=2;
+			game.world.removeAll();
+		}
+		function a5listener () {
+			auto=3;
+			kretanje=3;
+			game.world.removeAll();
+		}
+		function a6listener () {
+			auto=4;
+			kretanje=4;
+			game.world.removeAll();
+		}
+		function a7listener () {
+			auto=5;
+			kretanje=5;
+			game.world.removeAll();
+		}
+		function q7listener () {
+			auto=6;
+			kretanje=6;
+			game.world.removeAll();
+		}
+		function ttlistener () {
+			auto=7;
+			kretanje=7;
+			game.world.removeAll();
+		}
+		function r8listener () {
+			auto=8;
+			kretanje=8;
+			game.world.removeAll();
+		}
+		
+
+		function update()
+		{
+		
+			
+			if(auto==0)
+			{
+			
+			//Ucitavanje nove ulice i izabranog vozila
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'a3v');
+			game.physics.p2.enable(auto);
+			autoix=auto.x;
+			game.camera.follow(auto);
+			//Ucitavanje papucice gasa
+			
+			
+			}
+			else
+			if(auto==1)
+			{
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'a3v');
+			game.physics.p2.enable(auto);
+			game.camera.follow(auto);
+			
+			}
+			else
+			if(auto==2)
+			{
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'a3v-sedan');
+			game.physics.p2.enable(auto);
+			game.camera.follow(auto);
+			}
+			else
+			if(auto==3)
+			{
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'a5v');
+			game.physics.p2.enable(auto);
+			game.camera.follow(auto);
+			}
+			else
+			if(auto==4)
+			{
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'a6v');
+			game.physics.p2.enable(auto);
+			game.camera.follow(auto);
+			}
+			else
+			if(auto==5)
+			{
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'a7v');
+			game.physics.p2.enable(auto);
+			game.camera.follow(auto);
+			}
+			else
+			if(auto==6)
+			{
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'q7v');
+			game.physics.p2.enable(auto);
+			game.camera.follow(auto);
+			}
+			else
+			if(auto==7)
+			{
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'ttv');
+			game.physics.p2.enable(auto);
+			game.camera.follow(auto);
+			}
+			else
+			if(auto==8)
+			{
+			ulicatile=game.add.tileSprite(0,0,2500,game.cache.getImage('ulica').height,'ulica');
+			game.world.setBounds(0, 0, 2500, 600);
+			game.physics.startSystem(Phaser.Physics.P2JS);
+			game.add.image(2300,200,'cilj');
+			auto=game.add.image(0,400,'r8v');
+			game.physics.p2.enable(auto);
+			game.camera.follow(auto);
+			}
+			
+			
+			//autoix=auto.x;
+			if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT) )
+			{
+			
+				if(kretanje==1 || kretanje==2 || kretanje==4 ){
+					if(auto.x<2400)
+					{
+					auto.x += 6;
+					
+					ulicatile.tilePosition.x -=15;
+					}
+				}else 
+					if(kretanje==3 || kretanje==5 || kretanje==6)
+					{
+					if(auto.x<2400)
+					{
+					auto.x+=10;
+					ulicatile.tilePosition.x-=20;
+					}
+				}
+				else 
+				if(kretanje==0)
+				{
+				if(auto.x<2400)
+					{
+					auto.x += 14;
+					
+					ulicatile.tilePosition.x -=23;
+					}
+				}
+				else
+				{
+					if(auto.x<2400)
+					{
+					auto.x += 17;
+					
+					ulicatile.tilePosition.x -=27;
+					}
+				}
+			}
+			else 
+			if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT) )
+			{
+				if(kretanje==1 || kretanje==2 || kretanje==4 ){
+					if(auto.x>0)
+					{
+					auto.x -= 6;
+					
+					ulicatile.tilePosition.x +=15;
+					}
+				}else 
+					if(kretanje==3 || kretanje==5 || kretanje==6)
+					{
+						if(auto.x>0)
+						{
+						auto.x-=10;
+						ulicatile.tilePosition.x+=20;
+						}
+					}
+				else 
+				if(kretanje==0)
+				{
+				if(auto.x>0)
+					{
+					auto.x -= 14;
+					
+					ulicatile.tilePosition.x +=23;
+					}
+				}
+				else
+				{
+					if(auto.x>0)
+					{
+					auto.x -= 17;
+					
+					ulicatile.tilePosition.x +=27;
+					}
+				}
+			}
+			
+		}
+		
+    };
+	
+
+    </script>
+
+    </body>
+</html>
